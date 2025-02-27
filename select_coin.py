@@ -22,5 +22,3 @@ for ativo in lista_ativos:
         encontrado = True
         break
 
-# mostra se o cliente pode tradar ou não
-print(info["canTrade"])
