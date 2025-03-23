@@ -4,22 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preços Criptomoedas</title>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-        <script>
-            var socket = io();
-            socket.on('update_prices', function(data) {
-                let list = document.getElementById('prices');
-                list.innerHTML = '';
-                for (const [symbol, price] of Object.entries(data)) {
-                    let li = document.createElement('li');
-                    li.innerHTML = `<strong>${symbol}:</strong> ${price}`;
-                    list.appendChild(li);
-                }
-            });
-        </script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+
+        var socket = io();
+        // Mostrar preços das criptomoedas usadas no aplicativo
+        socket.on('update_prices', function(data) {
+            let list = document.getElementById('prices');
+            list.innerHTML = '';
+            for (const [symbol, price] of Object.entries(data)) {
+                let li = document.createElement('li');
+                li.innerHTML = `<strong>${symbol}:</strong> ${price}`;
+                list.appendChild(li);
+            }
+        });
+    </script>
 </head>
 <body>
     <h1>Preco atual das principais criptomoedas</h1>
     <ul id="prices"></ul>
+
+    <h1>Bitcoin (BTC) em Tempo Real 💸</h1>
+    <canvas id="btcChart" width="600" height="400"></canvas>
 </body>
 </html>
