@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request, redirect, session
+from flask import Flask, render_template, jsonify, request, redirect, session, flash
 from flask_socketio import SocketIO
 from binance.client import Client
 from password import api_key, api_secret
@@ -15,6 +15,13 @@ user = 'admin'
 password = 'senhasegura123'
 app.secret_key = 'Batat@12!'
 symbols = ['BTCUSDT', 'ETHUSDT', 'BNBUSDT', 'SOLUSDT', 'XRPUSDT']
+moedas = {
+            'Bitcoin': 'BTCUSDT', 
+            'Ethereum': 'ETHUSDT',
+            'BNB': 'BNBUSDT',
+            'Solana': 'SOLUSDT',
+            'XRP': 'XRPUSDT'
+        }
 
 # Pagina de Login
 @app.route('/')
@@ -35,9 +42,30 @@ def fetch_prices():
         time.sleep(1)  # Atualiza a cada 2 segundos
 
 # Pagina Principal
-@app.route('/mainPage')
+@app.route('/mainPage', methods=['GET', 'POST'])
+
 def main_page():
+
+    # BUY / SELL ORDER
+
+    if request.method == 'POST':
+        moeda = request.form['moeda']
+        valor = float(request.form['valor'])
+        simbolo = moedas[moeda]
+        acao = request.form['acao']
+
+        ticker = float(client.get_symbol_ticker(symbol=simbolo)["price"])
+        quantidade = round(valor / ticker, 6)
+
+        if acao == "buy":
+            ordem = client.order_market_buy(symbol=simbolo, quantity=quantidade)
+            flash(f'Compra realizada: {quantidade} de {moeda}', 'sucess')
+        elif acao == "sell":
+            ordem = client.order_market_sell(symbol=simbolo, quantity=quantidade)
+            flash(f'Venda realizada: {quantidade} de {moeda}' 'sucess')
+
     return render_template('mainpage.html')
+    
 
 # Validacao de Login
 @app.route('/validate', methods=['POST',])

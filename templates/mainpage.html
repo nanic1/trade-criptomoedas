@@ -25,7 +25,33 @@
     <h1>Preco atual das principais criptomoedas</h1>
     <ul id="prices"></ul>
 
-    <h1>Bitcoin (BTC) em Tempo Real 💸</h1>
-    <canvas id="btcChart" width="600" height="400"></canvas>
+    <h1>Compra / Venda de Criptomoedas</h1>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <p class="{{ category }}">{{ message }}</p>
+    {% endfor %}
+  {% endwith %}
+
+  <form method="post">
+    <label>Moeda:</label><br>
+    <select name="moeda" required>
+      {% for nome in moedas %}
+        <option value="{{ nome }}">{{ nome }}</option>
+      {% endfor %}
+    </select><br>
+
+    <label>Valor em USDT:</label><br>
+    <input type="number" name="valor" step="0.01" required><br>
+
+    <label>Ação:</label><br>
+    <select name="acao" required>
+      <option value="buy">🟢 Comprar</option>
+      <option value="sell">🔴 Vender</option>
+    </select><br>
+
+    <button type="submit">Executar Ordem</button>
+  </form>
+
 </body>
 </html>
