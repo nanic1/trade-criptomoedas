@@ -54,17 +54,18 @@ def main_page():
         simbolo = moedas[moeda]
         acao = request.form['acao']
 
-        ticker = float(client.get_symbol_ticker(symbol=simbolo)["price"])
-        quantidade = round(valor / ticker, 6)
+        preco = float(client.get_symbol_ticker(symbol=simbolo)["price"])
+        quantidade = round(valor / preco)
+        quantidade = float(f"{quantidade:.6f}") 
 
         if acao == "buy":
             ordem = client.order_market_buy(symbol=simbolo, quantity=quantidade)
             flash(f'Compra realizada: {quantidade} de {moeda}', 'sucess')
         elif acao == "sell":
             ordem = client.order_market_sell(symbol=simbolo, quantity=quantidade)
-            flash(f'Venda realizada: {quantidade} de {moeda}' 'sucess')
+            flash(f'Venda realizada: {quantidade} de {moeda}', 'sucess')
 
-    return render_template('mainpage.html')
+    return render_template('mainpage.html', moedas=moedas)
     
 
 # Validacao de Login
@@ -76,7 +77,7 @@ def valid_login():
 
         return redirect('/mainPage')
     else:
-        return redirect('/login')
+        return redirect('/')
     
 # Start app
 if __name__ == '__main__':
